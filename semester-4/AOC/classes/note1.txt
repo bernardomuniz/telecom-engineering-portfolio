@@ -28,7 +28,7 @@ Tipos de memória - RAM x ROM
 
     BIOS: responsável pela inicialização do computador
 
-Ao abrir um programa, comoStatic random access mesmo MATLAB, a ROM é responsável por carregar todos os dados do programa e jogar essas informalções para a 
+Ao abrir um programa, como MATLAB, a ROM é responsável por carregar todos os dados do programa e jogar essas informalções para a 
 memória RAM, dessa forma a memória de dados roda as informações do programa carregado
 
 Tipos de RAM
