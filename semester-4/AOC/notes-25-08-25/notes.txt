@@ -1,0 +1,52 @@
+Anotações de aula - 27/08
+
+Tipos de barramentos de memória:
+    Endereço: posiçãodo dado que está escrito na memória e que será lido
+    Dados: barramento por onde transitom os dados que serão lidos
+    Controle: Sinais que habilitam a chip (CS), leitura (RD) ou escrita (WR)
+
+ Uma memória com N bits de endereço e M bits de dados possui 2^N linha e M número de colunas
+    Produndidade(lenght): número de palavras (words) = 2²
+    Largura(widht): tamanho da palavra em bits = memória
+    Tamanho da memória: profundidade x largura = 2^N x memória
+
+ Bad Block: perca de memória conforme o uso do HD
+
+Tipos de memória - RAM x ROM
+    RAM - Random Access Memory - Memória de daos
+    - Perca de dados quando a energia é desligada (Volátil)
+    - Principal memória do computador - memória de dados do computador
+    - Responsável pelo processamento de dados
+    - Acesso randômico: conseguir ler qualquer posição da memória com o mesmo tempo de acesso
+    - É chamada de aleatória pois qualquer qualquer palavra pode ser acessada com a mesma facilidade
+
+    ROM - Ready Only Memory- Memória flash
+    - Não há perca de dados quando a energia é desligada (Não volátil)
+    - Memória dos programas do computador, não de dados
+    - Acesso mais demorado a dados
+    - Armazenamento em câmeras e Pen Drive
+
+    BIOS: responsável pela inicialização do computador
+
+Ao abrir um programa, comoStatic random access mesmo MATLAB, a ROM é responsável por carregar todos os dados do programa e jogar essas informalções para a 
+memória RAM, dessa forma a memória de dados roda as informações do programa carregado
+
+Tipos de RAM
+    DRAM (Dynamic Random Access Memory): 
+    - Usa um capacitor devido ao seu tamanho para armazenar dados
+    - É chamada de dinâmica porque o valor precisa ser relembrado após ser lido - Refresh
+    - A leitura destrói o valor armazenado
+
+    SRAM (Static random access memor): 
+    - Usa duas portas inversoras para armazenar o bit em um loop de realimentação
+    - A realimentação mantém o valor salvo, sem perdê-loop
+    - Custo mais caro devido ao uso das portas inversoras 
+
+Latência: tempo de acesso para leitura e escrita na memória
+    - Flip-flop: pequena
+    - SRAM: média
+    - DRAM: grande
+
+CPU (Unidade central de processamento) = Unidade de controle + Datapath
+
+Computador = CPU + Memória
