@@ -1,0 +1,15 @@
+ESTRUTURAS(STRUCT)
+
+TIPO DE DADO COMPOSTO DEFINIDO PELO USUÁRIO
+
+SINTAXES:
+STRUCT NAME {
+    -campos-
+};
+
+OU
+
+TYPEDEF STRUCT {
+    -campos-
+}Nome; 
+

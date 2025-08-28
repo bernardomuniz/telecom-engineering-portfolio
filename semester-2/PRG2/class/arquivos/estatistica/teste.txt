@@ -1,0 +1,16 @@
+Gretna;79.6
+Scicli;88.3
+Iserlohn;89.5
+Lutry;-23.3
+Soanpeta;42.0
+Gorokhovets;65.9
+Roßtal;1.2
+Villa Carlos Paz;37.2
+Surin;40.8
+Avalpūndurai;99.8
+Mirandópolis;-60.9
+Bindura;37.4
+Marofoty;-93.9
+Soacha;-92.5
+Arnhem;-10.3
+Viotá;-29.8
