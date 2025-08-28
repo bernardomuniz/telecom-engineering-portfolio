@@ -1,0 +1,1 @@
+delete esse arquivo, ele só serve para adicionar as pastas no git
