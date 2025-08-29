@@ -1,6 +1,8 @@
 package domain;
 
 import javax.swing.JFrame;
+import java.awt.*;
+
 import static domain.Constantes.*;
 
 public class InterfaceGrafica {
@@ -11,10 +13,13 @@ public class InterfaceGrafica {
         frame.setLocationRelativeTo(null);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setBackground(COR_FUNDO);
     }
 
-    public void inicializaInterfaceJogo(){
-
+    public void inicializaInterfaceJogo(Jogo jogo) {
+        frame.add(jogo);
+        frame.pack();
+        jogo.requestFocus();
         frame.setVisible(true);
     }
 

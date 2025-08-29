@@ -2,12 +2,24 @@ package ifsc.poo;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import javax.swing.*;
+import javax.swing.Timer;
+
+import org.checkerframework.checker.units.qual.g;
+
+import static domain.Constantes.*;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PacManGame extends JPanel implements ActionListener, KeyListener {
+
+    //Usado para definir o tempo de vulnerabilidade dos fantasmas
+    private ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
     class Block {
         int x;
         int y;
@@ -31,7 +43,7 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
             this.startY = y;
         }
 
-        void updateDirection(char direction) {
+        void updateDirection(char direction) { //Implementado no novo código
             char prevDirection = this.direction;
             this.direction = direction;
             updateVelocity();
@@ -47,7 +59,7 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
             }
         }
 
-        void updateVelocity() {
+        void updateVelocity() { //Implementado no novo código
             if (this.direction == 'U') {
                 this.velocityX = 0;
                 this.velocityY = -tileSize/4;
@@ -89,35 +101,41 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
     private Image pacmanLeftImage;
     private Image pacmanRightImage;
 
+    //Imagem da cereja e do fantasma
+    private Image cerejaImage;
+    private Image fantasmaVulneravel;
+
     //X = wall, O = skip, P = pac man, ' ' = food
-    //Ghosts: b = blue, o = orange, p = pink, r = red
+    //Ghosts: b = blue, o = orange, p = pink, r = red, c= cereja
     private String[] tileMap = {
-        "XXXXXXXXXXXXXXXXXXX",
-        "X        X        X",
-        "X XX XXX X XXX XX X",
-        "X                 X",
-        "X XX X XXXXX X XX X",
-        "X    X       X    X",
-        "XXXX XXXX XXXX XXXX",
-        "OOOX X       X XOOO",
-        "XXXX X XXrXX X XXXX",
-        "O       bpo       O",
-        "XXXX X XXXXX X XXXX",
-        "OOOX X       X XOOO",
-        "XXXX X XXXXX X XXXX",
-        "X        X        X",
-        "X XX XXX X XXX XX X",
-        "X  X     P     X  X",
-        "XX X X XXXXX X X XX",
-        "X    X   X   X    X",
-        "X XXXXXX X XXXXXX X",
-        "X                 X",
-        "XXXXXXXXXXXXXXXXXXX" 
+            "XXXXXXXXXXXXXXXXXXX",
+            "Xc       X        X",
+            "X XX XXX X XXX XX X",
+            "X        c        X",
+            "X XX X XXXXX X XX X",
+            "X    X       X    X",
+            "XXXX XXXX XXXX XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXrXX X XXXX",
+            "O       bpo      cO",
+            "XXXX X XXXXX X XXXX",
+            "OOOX X       X XOOO",
+            "XXXX X XXXXX X XXXX",
+            "X        X        X",
+            "X XX XXX X XXX XX X",
+            "X  X     P     X  X",
+            "XX X X XXXXX X X XX",
+            "X    X   X   X    X",
+            "X XXXXXX X XXXXXX X",
+            "Xc                X",
+            "XXXXXXXXXXXXXXXXXXX"
     };
 
     HashSet<Block> walls;
     HashSet<Block> foods;
     HashSet<Block> ghosts;
+    HashSet<Block> cerejas;
+    HashSet<Block> fantasmasVulneraveis;
     Block pacman;
 
     Timer gameLoop;
@@ -127,11 +145,11 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
     int lives = 3;
     boolean gameOver = false;
 
-    private Image imgFromFile(String fileName) {
+    private Image imgFromFile(String fileName) { //Implementado no novo código
         return new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource(fileName))).getImage();
     }
 
-    private boolean detectCollision(Block a, Block b) {
+    private boolean detectCollision(Block a, Block b) {  //Implementado no novo código
         return  a.x < b.x + b.width &&  //a's top left corner doesn't reach b's top right corner
                 a.x + a.width > b.x &&  //a's top right corner passes b's top left corner
                 a.y < b.y + b.height && //a's top left corner doesn't reach b's bottom left corner
@@ -156,6 +174,11 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
         this.pacmanLeftImage = this.imgFromFile("./pacmanLeft.png");
         this.pacmanRightImage = this.imgFromFile("./pacmanRight.png");
 
+        //Definindo a imagem do fantasma e da cereja
+        this.cerejaImage = this.imgFromFile("./cherry.png");
+        this.fantasmaVulneravel = this.imgFromFile("./scaredGhost.png");
+
+
         loadMap();
         for (Block ghost : ghosts) {
             char newDirection = directions[random.nextInt(4)];
@@ -167,11 +190,15 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
 
     }
 
-    public void loadMap() {
+    public void loadMap() { //Implementado no novo código
         walls = new HashSet<>();
         foods = new HashSet<>();
         ghosts = new HashSet<>();
-
+        cerejas = new HashSet<>();
+        fantasmasVulneraveis = new HashSet<>();
+        for (int i = 0; i < tileMap.length; i++) {
+            System.out.println(tileMap[i]);
+        }
         for (int r = 0; r < rowCount; r++) {
             for (int c = 0; c < columnCount; c++) {
                 String row = tileMap[r];
@@ -206,13 +233,18 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
                 else if (tileMapChar == ' ') { //food
                     Block food = new Block(null, x + 14, y + 14, 4, 4);
                     foods.add(food);
+
+                    //Carrega as crejas no mapa
+                }else if (tileMapChar == 'c'){
+                    Block cherry = new Block(this.cerejaImage, x, y, tileSize, tileSize);
+                    cerejas.add(cherry);
                 }
             }
         }
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) { //Implementado no novo código
         super.paintComponent(g);
         g.drawImage(pacman.image, pacman.x, pacman.y, pacman.width, pacman.height, null);
 
@@ -222,6 +254,11 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
 
         for (Block wall : walls) {
             g.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height, null);
+        }
+
+        //Desenhando as cerejas no mapa
+        for (Block cherry : cerejas){
+            g.drawImage(cherry.image, cherry.x, cherry.y, cherry.width, cherry.height, null);
         }
 
         g.setColor(Color.WHITE);
@@ -238,9 +275,33 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+
+    //O jogador deve conseguir sair por uma lateral do mapa e reaparecer na outra
+    void detectarBorda(){
+        //Quando chegar no limite inicial do eixo x é teletransportado para o final do mapa
+        if (pacman.x == 0){
+            pacman.x = LARGURA_TELA;
+            //Quuando chegar no limite final do eixo x é teletransportado para o inicio do mapaa
+        } else if (pacman.x == LARGURA_TELA) {
+            pacman.x = 0;
+        }else if (pacman.y == 0){ //Mesma ideia para o eixo y
+            pacman.y = ALTURA_TELA;
+        }else if (pacman.y == ALTURA_TELA) {
+            pacman.y = 0;
+        }
+    }
+
+
+    //
     public void move() {
         pacman.x += pacman.velocityX;
         pacman.y += pacman.velocityY;
+
+        //Enquanto o PacMan se move fica detectando se ele não atingiu a borda
+        detectarBorda();
+
+        //Verifica se o PacMan comeu a cereja
+        comendoCereja();
 
         //check wall collisions
         for (Block wall : walls) {
@@ -252,30 +313,7 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
         }
 
         //check ghost collisions
-        for (Block ghost : ghosts) {
-            if (detectCollision(ghost, pacman)) {
-                lives -= 1;
-                if (lives == 0) {
-                    gameOver = true;
-                    return;
-                }
-                resetPositions();
-            }
-
-            if (ghost.y == tileSize*9 && ghost.direction != 'U' && ghost.direction != 'D') {
-                ghost.updateDirection('U');
-            }
-            ghost.x += ghost.velocityX;
-            ghost.y += ghost.velocityY;
-            for (Block wall : walls) {
-                if (detectCollision(ghost, wall) || ghost.x <= 0 || ghost.x + ghost.width >= boardWidth) {
-                    ghost.x -= ghost.velocityX;
-                    ghost.y -= ghost.velocityY;
-                    char newDirection = directions[random.nextInt(4)];
-                    ghost.updateDirection(newDirection);
-                }
-            }
-        }
+        detectarColisaoDeFantasma();
 
         //check food collision
         Block foodEaten = null;
@@ -291,7 +329,78 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
             loadMap();
             resetPositions();
         }
+
+        comendoCereja();
     }
+
+    void detectarColisaoDeFantasma() {
+        //Só altera as vidas e reseta as posições se a flag de colisao estiver ativa
+        if (colisaoFantasmaAtiva){
+            for (Block ghost : ghosts) {
+                if (detectCollision(ghost, pacman)) {
+                    lives -= 1;
+                    if (lives == 0) {
+                        gameOver = true;
+                        return;
+                    }
+                    resetPositions();
+                }
+            }
+        }
+
+        for (Block ghost : ghosts){
+            if (ghost.y == tileSize*9 && ghost.direction != 'U' && ghost.direction != 'D') {
+                ghost.updateDirection('U');
+            }
+            ghost.x += ghost.velocityX;
+            ghost.y += ghost.velocityY;
+            for (Block wall : walls) {
+                if (detectCollision(ghost, wall) || ghost.x <= 0 || ghost.x + ghost.width >= boardWidth) {
+                    ghost.x -= ghost.velocityX;
+                    ghost.y -= ghost.velocityY;
+                    char newDirection = directions[random.nextInt(4)];
+                    ghost.updateDirection(newDirection);
+                }
+            }
+        }
+
+    }
+
+    private boolean colisaoFantasmaAtiva = true; //Flag que checa se a colisão de fantasma esta ativa ou não
+    Map<Block ,Image> imagensGuardadas = new HashMap<>(); //Fila que guarda as imagens anteriores dos fantasmas
+
+    void comendoCereja(){
+        //checando colisão entre pacman e fantasma
+        Block cerejaComida = null;
+        for (Block cereja: cerejas){
+            if (detectCollision(pacman,cereja)){ //Se detectar a colisão do pacman com a cereja
+                cerejaComida = cereja;
+                score += 50; //Aumenta o score
+                //pacman comeu uma cereja colisao = false --> em menos de 10 seg comeu outra cereja colisao = true (erro!)
+
+                if (colisaoFantasmaAtiva){
+                    colisaoFantasmaAtiva = false; //Desativa a flag de colisão de fantasma
+                    imagensGuardadas.clear();
+
+                    for (Block b: ghosts){
+                        imagensGuardadas.put(b,b.image); //Adiciona as imagens dos fantasmas a fila
+                        b.image = fantasmaVulneravel;
+                    }
+                }
+                    
+                    //Após 10 segundos a colisão de fantasma vai ser reativada e os fantasmas voltam com a imagem original
+                    scheduler.schedule(()-> {
+                        colisaoFantasmaAtiva = true;
+                        for(Block b: ghosts){
+                            b.image = imagensGuardadas.get(b);
+                        }
+                    }, 10, TimeUnit.SECONDS);
+            }
+        }
+        cerejas.remove(cerejaComida);
+    }
+
+
 
     public void resetPositions() {
         pacman.reset();
@@ -303,6 +412,7 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
             ghost.updateDirection(newDirection);
         }
     }
+
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -356,3 +466,4 @@ public class PacManGame extends JPanel implements ActionListener, KeyListener {
         }
     }
 }
+

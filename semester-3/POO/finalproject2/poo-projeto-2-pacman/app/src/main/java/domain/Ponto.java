@@ -15,10 +15,7 @@ public class Ponto {
         }
     }
 
-    public int getX() {
-
-        return this.x;
-    }
+    public int getX() { return this.x; }
 
     public boolean setX(int x) {
         if(x > LARGURA_TELA + TAM_BLOCO) return false;
@@ -27,6 +24,7 @@ public class Ponto {
     }
 
     public boolean setY(int y) {
+        if(y > LARGURA_TELA + TAM_BLOCO) return false;
         this.y = y;
         return true;
     }

@@ -1,26 +1,30 @@
 package ifsc.poo;
 
-import javax.swing.JFrame;
+import domain.InterfaceGrafica;
+import domain.Jogo;
+import domain.Mapa;
+
+import java.util.Objects;
+import java.util.Scanner;
+import static domain.Constantes.*;
+
 
 public class App {
     public static void main(String[] args) {
-        int rowCount = 21;
-        int columnCount = 19;
-        int tileSize = 32;
-        int boardWidth = columnCount * tileSize;
-        int boardHeight = rowCount * tileSize;
+        Scanner entrada = new Scanner(Objects.requireNonNull(App.class.getClassLoader().getResourceAsStream("mapa.txt")));
+        Mapa mapa = new Mapa(entrada);
+        InterfaceGrafica interfaceGrafica = new InterfaceGrafica();
+        Jogo jogo;
+        try {
+            jogo = new Jogo(interfaceGrafica, mapa, ehCoop(args[0])); //Multiplayer
+        } catch (java.lang.ArrayIndexOutOfBoundsException e){ //Try catch pra facilitar a verificação se há ao menos um argumento como parâmetro
+            jogo = new Jogo(interfaceGrafica, mapa, false);//Singleplayer
+        }
+        jogo.iniciaJogo();
+    }
 
-        JFrame frame = new JFrame("Pac Man");
-        frame.setSize(boardWidth, boardHeight);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        PacManGame pacmanGame = new PacManGame();
-        frame.add(pacmanGame);
-        frame.pack();
-        pacmanGame.requestFocus();
-        frame.setVisible(true);
-
+    public static boolean ehCoop(String string){
+        string = string.toLowerCase();
+        return string.equals(COOP);
     }
 }
