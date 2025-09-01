@@ -112,7 +112,7 @@ public class Tabuleiro {
                 posicoesOcupadas.remove(disparo);
 
                 if (posicoesOcupadas.isEmpty()) {
-                    System.out.println("Navio foi afundado!");
+                    System.out.println("\n>> Navio foi afundado!");
                 }
             }
         }

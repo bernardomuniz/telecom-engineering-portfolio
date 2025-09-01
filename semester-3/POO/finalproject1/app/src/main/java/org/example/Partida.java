@@ -146,6 +146,7 @@ public class Partida {
         System.out.println("Vamos começar a batalha naval!");
         System.out.println("==================================");
 
+
         while(!jogador.getTabuleiro().verificaNaviosDestruidos() && !robo.getTabuleiro().verificaNaviosDestruidos()){
             if(turnoDoJogador){
                 System.out.println("\nSua vez de jogar!");
@@ -190,9 +191,22 @@ public class Partida {
         perguntarNovaPartida(sc, turnoDoJogador);
     }
 
+    private boolean validaEntradaUsuario(String string) {
+    if (!string.equals("s") && !string.equals("n")) {
+        System.out.println("Entrada inválida!");
+        return true; 
+    }
+    return false;
+}
+
+
     private void perguntarNovaPartida(Scanner sc, boolean jogadorComeca) {
-        System.out.print("\nDeseja jogar novamente? (S/N): ");
-        String opcao = sc.nextLine().trim().toLowerCase();
+            String opcao;
+        do{
+            System.out.print("\nDeseja jogar novamente? (S/N): ");
+            opcao = sc.nextLine().trim().toLowerCase();
+        }while(validaEntradaUsuario(opcao));
+        
         if (opcao.equals("s")) {
             reiniciarPartida();
             posicionarNaviosJogadores();

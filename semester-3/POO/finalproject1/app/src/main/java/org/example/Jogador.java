@@ -1,6 +1,6 @@
 package org.example;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Jogador {
@@ -27,8 +27,10 @@ public class Jogador {
     }
 
     public boolean jaJogou(String posicao) {
-        if (jogadas.contains(posicao) && !isEhRobo()){
-            System.out.println("Já foi realizado este disparo!");
+        if (jogadas.contains(posicao)){
+            if(!isEhRobo()){
+              System.out.println("Já foi realizado este disparo!");  
+            }
             return true;
         }
         return false;
@@ -149,6 +151,10 @@ public class Jogador {
 
     public Tabuleiro getTabuleiro() {
         return tabuleiroJogador;
+    }
+    
+    public List<String> getJogadas(){
+        return this.jogadas;
     }
 
 }

@@ -142,6 +142,7 @@ A tabela abaixo mostra os navios presentes no jogo Batalha Naval, bem como a qua
 | Contratorpedeiro   |        2        |    N    |
 
 </div>
+
 ### Posicionar navios
 Ao iniciar o jogo você pode escolher entre posicionar seus navios automaticamente ou manualmente.
 Se caso escolher automaticamente, o jogo gera um tabuleiro com novos navios posicionados de maneira aleatória e da início ao jogo.
@@ -170,7 +171,7 @@ O tabuleiro com título "Navios" representa o seu tabuleiro, enquanto o tabuleir
 
 Semelhante ao posicionamento do navio, para atirar no tabuleiro inimigo você deve informar uma posição válida formato **"(linha) (coluna)"**, onde a linha seriam os valores que variam de A - J e a coluna de 0 - 9.
 
-- Se caso o jogador ou o robô acertar algum navio inimigo, ele disparará um novo tiro até errar, e então a jogada passa para o outro jogador
+- Se caso o jogador ou o robô acertar algum navio inimigo, a vez passará para o próximo jogador.
 - Ao final da partida você irá ver as estatísticas do jogo, contendo o jogador e o número de vitórias.
 
 Fique a vontade para se divertir no jogo Batalha Naval!
