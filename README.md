@@ -9,3 +9,4 @@ To clone the repository to your local machine using Git, simply run the followin
 
 `git clone https://github.com/bernardomuniz/telecom-engineering-portfolio`
 
+palavra
