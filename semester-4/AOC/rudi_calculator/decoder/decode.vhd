@@ -1,6 +1,4 @@
--- Arquitetura e Organizacao de Computadores
--- Autor: Roberto de Matos
--- Decodificador do processador didático Rudi.
+
 
 library ieee;
 use ieee.std_logic_1164.all;
