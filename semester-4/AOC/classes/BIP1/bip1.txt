@@ -1,4 +1,4 @@
-BIP (Basic Instruction-set Processor)
+Arquitetura e Organização do BIP I 
 
 O Processador pode ser descrito em dois níveis
     - Arquiteturial: 
@@ -22,7 +22,7 @@ Atributos de nível Arquiteturial de um processador
     - Modos de endereçamento: Como os dados são acessados quando processados pelas instruções
     - Conjunto de instruções: vocabulário das instruções e códigos utilizados por cada instrução.
 
-Arquitetura do BIP
+Arquitetura do BIP (Basic Instruction-set Processor)
     - Arquitetura de 16 bits
     - BIP V1: instruções básicas para operações aritméticas de soma e subtração com números inteiros
     - BIP V2: tem instruções de desvio
@@ -31,7 +31,16 @@ Arquitetura do BIP
         - Os tipos de dados sem inteiros com sinal e os números são representados em complemento de 2 (variando de –32768 a 32767)
     - O formato das instruções possuem 16 bits (tamanho da palavra de instrução)
         - Código de operação de 5 bits e operando de 11 bits
+
+            15  14  13  12  11  10   9   8   7   6   5   4   3   2   1   0
+            +-------------------------------------------------------------+
+            | Cód. Operação  |                      Operando              |
+            +-------------------------------------------------------------+
+
     - Modos de endereçamento
+        - Direto: o dado a ser processado é uma variável na memória apontada pelo operando da instrução (endereço)
+        - Imediato: O dado a ser manipulado é o próprio operando (imediato) da instrução
+        - Em uma arquitetura BIP, o modo de endereçamento IMEDIATO  é utilizado para acesso de uma variável na memória de dados
         - Usa um acumulador (ACC - operando implícito) e um operando explícito para realizar as instruções
     - ACC(Accumulator): Serve para armazenamento temporário de dados no processador
     - Conjunto de instruções: 

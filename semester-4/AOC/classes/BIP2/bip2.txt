@@ -1,0 +1,152 @@
+Arquitetura e Organização do BIP II
+
+- Inclui um registrador com dois bits de estado:
+    - STATUS.Z (Zero): Resultado da última operação aritmética = 0
+    - STATUS.N (Negative): Resultado da última operação aritmética < 0
+Inclui duas classes adicionais de instrução:
+   - Desvio incondicional: Muda o fluxo de execução do programa, atualizando o PC com o endereço de instrução especificado
+    - Desvio condicional: Se a condição especificada for verdadeira, desvia para o endereço de instrução especificado
+
+
+Conjunto de instruções BIP II
+
+Instrução de desvio incondicional
+---------------------------------------------------------------
+Mnemônico   | Significado | Descrição
+---------------------------------------------------------------
+JMP         | Jump        | Desvia incondicionalmente
+
+Instruções de desvio condicional
+---------------------------------------------------------------
+Mnemônico   | Significado              | Descrição
+---------------------------------------------------------------
+BEQ         | Branch on Equal          | Desvia se igual
+BNE         | Branch on Not Equal      | Desvia se não igual
+BGT         | Branch on Greater Than   | Desvia se maior que
+BGE         | Branch on Greater or Eq. | Desvia se maior ou igual que
+BLT         | Branch on Less Than      | Desvia se menor que
+BLE         | Branch on Less or Equal  | Desvia se menor ou igual que
+
+Instruções de desvio condicional devem ser precedidas por uma operação SUB ou SUBI sobre os operandos a serem comparados.
+Exemplo:
+1 LD A
+2 SUBI 2
+3 BLE addr
+
+if (A>=B) {
+  A = A + 1 // Bloco 1
+}
+// Bloco 2
+
+START:
+    LD A 
+    SUB B
+    BLT L1
+    LD A 
+    ADDi 1
+    STO A 
+L1:
+    HLT
+
+
+if (A>B) {
+  A = A+1; // Bloco 1
+} else {
+  B = B+1; // Bloco 2
+}
+// Bloco 3
+
+START:
+    LD A
+    SUB B 
+    BLE L1
+    LD A 
+    ADDI 1
+    STO A
+    JMP L2
+L1:
+    LD B 
+    ADD 1
+    STO B
+    JMP L2
+L2:
+    HLT
+
+
+i = 0;
+while (i<10) {
+    A += 2;     // Bloco 1
+    i++; 
+}
+// Bloco 2
+
+LDI 0
+STO I 
+
+L1: 
+    LD I 
+    SUBI 10
+    BGE L2
+    LD A 
+    ADDI 2
+    STO A
+    LD I 
+    ADDI 1
+    STO I 
+    JMP L1 
+L2:
+    HLT
+
+
+
+i = 0; 
+do {
+  A += 2    // Bloco 1
+  i++;
+} while (i<10)
+// Bloco 2
+
+LDI 0
+STO I 
+
+L1: 
+    LD A 
+    ADDI 2
+    STO A 
+    LD I 
+    ADDI 1
+    STO I 
+    SUBI 10
+    BLT L1
+L2:
+    HLT
+
+
+
+
+if (a == b)
+  a = a + 1;
+else if (a > b)
+  a = a + 2;
+else if  (a < b)
+  a = a + 3;
+
+LD A 
+SUBI B 
+BNE L1 
+LD A 
+ADDI 1
+STO A 
+JMP L3
+
+L1: BLT L2 
+    LD A 
+    ADDI 2
+    STO A 
+    JMP L3 
+L2: 
+    LD A 
+    ADDI 3 
+    STO A 
+L3:
+    HLT
