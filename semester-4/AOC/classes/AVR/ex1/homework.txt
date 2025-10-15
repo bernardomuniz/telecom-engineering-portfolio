@@ -1,0 +1,70 @@
+Faça um programa que some duas variáveis de 8 bits:
+C = A + B
+
+Considere as varáveis A, B e C armazenadas sequencialmente a partir do primeiro endereço da memória SRAM.
+
+Faça 4 implementações utilizando os seguintes modos de endereçamento: Direto, Indireto (sem incrementar), Indireto com Pós-incremento e Indireto com Deslocamento.
+
+
+;========================================================
+; Exemplo: C = A + B usando 4 modos de endereçamento
+;========================================================
+.INCLUDE <m328pdef.inc>
+
+.CSEG
+.ORG 0x0000
+    rjmp start
+
+start:
+
+; 1. MODO DIRETO
+
+    ldi r16, 5
+    sts 0x0060, r16
+    ldi r16, 3
+    sts 0x0061, r16
+
+    lds r16, 0x0060
+    lds r17, 0x0061
+    add r16, r17
+    sts 0x0062, r16
+
+
+; 2. MODO INDIRETO (sem incremento)
+
+    ldi r26, 0x60
+    ldi r27, 0x00
+    ld  r16, X           ; A (0x0060)
+
+    ldi r26, 0x61
+    ld  r17, X           ; B (0x0061)
+
+    add r16, r17
+    ldi r26, 0x62
+    st  X, r16           ; C (0x0062)
+
+; 3. MODO INDIRETO COM PÓS-INCREMENTO
+
+    ldi r26, 0x60
+    ldi r27, 0x00
+
+    ld  r16, X+          ; A
+    ld  r17, X+          ; B
+    add r16, r17
+    st  X, r16           ; C
+
+
+; 4. MODO INDIRETO COM DESLOCAMENTO
+
+    ldi r28, 0x60
+    ldi r29, 0x00
+
+    ldd r16, Y+0         ; A
+    ldd r17, Y+1         ; B
+    add r16, r17
+    std Y+2, r16         ; C
+
+
+; Loop infinito
+loop:
+    rjmp loop
