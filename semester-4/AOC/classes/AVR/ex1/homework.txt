@@ -68,3 +68,61 @@ start:
 ; Loop infinito
 loop:
     rjmp loop
+
+
+====================================================
+                        Correção:
+====================================================
+
+.DSEG
+.ORG SRAM_START
+    
+A: .BYTE 1
+B: .BYTE 1
+C: .BYTE 1
+ 
+ ;------Forma Direta --------
+ .CSEG
+ start:
+    lds r0, A
+    lds r1, B
+    add r0, r1 ;o resultado da soma fica no registrador r0
+    sts C, r0
+ rjmp start
+ 
+ 
+ ;------Forma indireta --------
+ start2:
+ldi XH, HIGH(A)
+ldi XL, LOW(A) ; ponteiro X apontando para o conteudo de A
+LD r0, X   
+ADIW XL, 1
+LD r1, X
+add r0, r1
+ADIW XL, 1
+st X, r0
+rjmp start2
+    
+ ;------Forma Pós incremento --------
+ start3:
+ldi XH, HIGH(A)
+ldi XL, LOW(A) ; ponteiro X apontando para o conteudo de A
+    
+LD r0, X+
+LD r1, X+
+add r0, r1
+st X, r0
+    
+rjmp start3
+
+     ;------Forma deslocamento --------
+ start4:
+ldi YH, HIGH(A)
+ldi YL, LOW(A) ; ponteiro Y apontando para o conteudo de A
+    
+ldd r0, Y+0
+ldd r1, Y+1
+add r0, r1
+std Y+2, r0
+    
+rjmp start4
