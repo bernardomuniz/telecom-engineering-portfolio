@@ -1,4 +1,4 @@
-# Telecom Engineering Repository
+# Telecom Engineering Portfolio
 ## Bernardo Muniz - IFSC SJ
 This repository is dedicated to the storage and documentation of all studies and projects developed during the Telecommunications Engineering course at IFSC São José.
 
