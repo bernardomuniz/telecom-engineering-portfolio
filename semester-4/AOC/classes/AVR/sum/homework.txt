@@ -1,14 +1,8 @@
-Faça um programa que some duas variáveis de 8 bits:
-C = A + B
+;Faça um programa que some duas variáveis de 8 bits:
+;C = A + B
+;Considere as varáveis A, B e C armazenadas sequencialmente a partir do primeiro endereço da memória SRAM.
+;Faça 4 implementações utilizando os seguintes modos de endereçamento: Direto, Indireto (sem incrementar), Indireto com Pós-incremento e Indireto com Deslocamento.
 
-Considere as varáveis A, B e C armazenadas sequencialmente a partir do primeiro endereço da memória SRAM.
-
-Faça 4 implementações utilizando os seguintes modos de endereçamento: Direto, Indireto (sem incrementar), Indireto com Pós-incremento e Indireto com Deslocamento.
-
-
-;========================================================
-; Exemplo: C = A + B usando 4 modos de endereçamento
-;========================================================
 .INCLUDE <m328pdef.inc>
 
 .CSEG
@@ -69,7 +63,6 @@ start:
 loop:
     rjmp loop
 
-
 ====================================================
                         Correção:
 ====================================================
@@ -115,7 +108,7 @@ st X, r0
     
 rjmp start3
 
-     ;------Forma deslocamento --------
+;------Forma com deslocamento --------
  start4:
 ldi YH, HIGH(A)
 ldi YL, LOW(A) ; ponteiro Y apontando para o conteudo de A
