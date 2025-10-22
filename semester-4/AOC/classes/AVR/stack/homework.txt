@@ -1,0 +1,130 @@
+;Implemente uma sub-rotina que some duas variáveis de 32 bits na SRAM com as seguintes características:
+    ;O ponteiros X e Y devem ser usados para passar como parâmetro a posição das variáveis.
+    ;O resultado será armazenado na variável apontada pelo ponteiro Z.
+    ;Considere o byte menos significativo armazenado no menor endereço.
+    ;Salve o contexto adequadamente.
+    ;Faça um programa principal para testar a sub-rotina.
+
+
+
+
+
+
+.DSEG
+.ORG SRAM_START
+
+A: .BYTE 4
+B: .BYTE 4
+C: .BYTE 4
+
+.CSEG
+start:
+    LDI XL, LOW(A)
+    LDI XH, HIGH(A)
+    LDI YL, LOW(B)
+    LDI YH, HIGH(B)
+    LDI ZL, LOW(C)
+    LDI ZH, HIGH(C)
+    
+    RCALL soma32bits
+    
+soma32bits:
+    ;Salva contexto
+    push R0
+    push R1
+    IN R0, SREG
+    push r0
+    
+    ;A soma é feita 4 vezes pois cada variavel guarda 8 btis, então deve ser feito esse processo 4 vezes
+    ;O ADC é usado por causa do valor de carry. Se fosse feito um loop deveria ser usado clear no inicio da rotina
+    
+    LD R0, X+ ;lee os bytes menos significativos de A e B
+    LD R1, Y+
+    ADD R0, R1 ;soma os dois bytes
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    ADC R0, R1 
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    ADC R0, R1 
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    ADC R0, R1 
+    ST Z+, R0
+    
+    ;recuperar contexto
+    POP R0
+    OUT SREG, R0
+    POP R1
+    POP R0
+    ret      ;toda subrotina termina com ret
+    
+RJMP start
+    
+
+
+
+
+COM LOOP:
+
+.DSEG
+.ORG SRAM_START
+
+A: .BYTE 4
+B: .BYTE 4
+C: .BYTE 4
+
+.CSEG
+start:
+    LDI XL, LOW(A)
+    LDI XH, HIGH(A)
+    LDI YL, LOW(B)
+    LDI YH, HIGH(B)
+    LDI ZL, LOW(C)
+    LDI ZH, HIGH(C)
+    
+    RCALL soma32bits
+    
+    CLC
+    LDI R16,4
+    
+soma32bits:
+    ;Salva contexto
+    push R0
+    push R1
+    PUSH R16
+    IN R0, SREG
+    push r0
+    
+    CLC
+    LDI R16,4
+loop_soma:
+    
+    LD R0, X+ ;lee os bytes menos significativos de A e B
+    LD R1, Y+
+    ADC R0, R1 ;soma os dois bytes
+    ST Z+, R0
+    DEC R16
+    BRNE loop_soma
+   
+    ;recuperar contexto
+    POP R0
+    OUT SREG, R0
+    POP R1
+    POP R0
+    ret      ;toda subrotina termina com ret
+    
+RJMP start
+    
+    
+    
+    
+    
+    
+    
