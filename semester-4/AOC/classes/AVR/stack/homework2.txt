@@ -1,0 +1,116 @@
+
+;    init_32bits
+        ;Inicializa uma variável de 32 bits apontada por X com os valores passados em R16, R17, R18 e R19
+        ;Parâmetros:
+            ;R16, R17, R18, R19 : Valor que deve ser utilizado na inicialização. 
+	    ;Sendo o R16 o byte menos significativo e o R19 o mais.
+            ;Registrador X:Ponteiro para a posição inicial da variável. Considere o byte menos significativo armazenado no menor endereço.
+    ;zera_32bits
+        ;Inicializa uma variável de 32 bits com zero.
+        ;Parâmetros:
+            ;Registrador X : Ponteiro para a posição inicial da variável.
+
+    ;sub_32bits
+        ;Subtraia duas variáveis de 32 bits e guarde em uma terceira variável.
+        ;Parâmetros:
+            ;Registrador X : Ponteiro para a posição inicial da primeira variável.
+            ;Registrador Y : Ponteiro para a posição inicial da segunda variável, a qual será subtraída da primeira.
+            ;Registrador Z : Ponteiro para a posição inicial da terceira variável.
+
+    ;Observações:
+        ;Salve o contexto adequadamente.
+        ;Utilize modos de endereçamento adequados para cada caso e laços de repetição, se for o caso.
+	
+init_32bits:
+    ST X+, R16
+    ST X+, R17
+    ST X+, R18
+    ST X, R19
+    ret
+    
+zera_32bits:
+    PUSH R16
+    IN R16, SREG
+    PUSH R16
+    
+    LDI R16, 0 
+    ST X+, R16
+    ST X+, R16
+    ST X+, R16
+    ST X, R16
+    
+    POP R16
+    OUT SREG, R16
+    POP R16
+    
+    ret
+    
+    ;Se usar LDI para inicializar r16 com 0, não precisava salvar o contexto
+    
+    ;PUSH R16
+    
+    ;LDI R16, 0 
+    ;ST X+, R16
+    ;ST X+, R16
+    ;ST X+, R16
+    ;ST X, R16
+   
+    ;POP R16
+    
+    ;ret
+    
+sub_32bits:
+       
+    push R0
+    push R1
+    IN R0, SREG
+    push r0
+    
+  
+    LD R0, X+ 
+    LD R1, Y+
+    SUB R0, R1 
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    SBC R0, R1 
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    ADC R0, R1 
+    ST Z+, R0
+    
+    LD R0, X+ 
+    LD R1, Y+
+    ADC R0, R1 
+    ST Z+, R0 
+    
+    ;recuperar contexto
+    POP R0
+    OUT SREG, R0
+    POP R1
+    POP R0
+    ret      ;toda subrotina termina com ret
+    
+    
+    clc
+    LDI R16, 4
+loopsub_32bits:
+    LD R0,X+
+    LD R1, Y+
+    SBC R0,R1
+    ST Z+,R0
+    
+    DEC R16
+    BRNE loopsub_32bits
+    
+    POP R0
+    OUT SREG, R0
+    POP R16
+    POP R1
+    POP R0
+    ret
+    
+    RJMP start
