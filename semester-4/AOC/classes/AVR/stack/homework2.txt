@@ -1,4 +1,4 @@
-
+se a instrução a ser utilizada alterar qualquer flag, deve ser feito o salvamente de contexto. Só não deve ser salvo se tiver com none.
 ;    init_32bits
         ;Inicializa uma variável de 32 bits apontada por X com os valores passados em R16, R17, R18 e R19
         ;Parâmetros:
