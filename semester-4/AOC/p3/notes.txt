@@ -1,0 +1,10 @@
+;Ligar e desligar led
+setup:
+sbi DDRB, PB5 ;configura o pino PB5 como saída
+loop:
+sbi PORTB, PB5 ;liga o led
+cbi PORTB, PB5 ;Desliga o led
+RJMP loop
+
+cbi DDRD, PD7 ;configura o pino PD7 como entrada
+sbi PORTD, PD7 ;habilita o pull-up para o bot~ao
