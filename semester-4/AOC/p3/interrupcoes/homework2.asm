@@ -1,8 +1,11 @@
 
 ;Questão 2: Interrupção
     ;Converta o código acima para que os botões INC/DEC e RST funcionem como interrupções externas.
-    ;A porta B deve ser incrementada no momento em que o botão INC/DEC for pressionado e a porta C decrementada quando o botão for liberado.
+    ;A porta B deve ser incrementada no momento em que o botão INC/DEC for pressionado e a porta C
+	;decrementada quando o botão for liberado.
     ;Mantenha duas variáveis na memória count_b e count_c para armazenar o estado das portas.
+	
+
 
 .equ RST = PD2
 .equ INC_DEC = PD3
@@ -13,8 +16,17 @@
     count_c: .BYTE 1
 .CSEG    
     
-.org 0x0000
-    rjmp setup
+.ORG 0x000
+    RJMP setup
+
+.ORG 0x002
+    RJMP isr_int0
+
+.ORG 0x004
+    RJMP isr_int1
+	
+.ORG 0x0034
+
 
 setup:
     ;Configurando botões de entrada
@@ -32,14 +44,14 @@ setup:
     ;Carregando os valores do PORTB e PORTC
     ldi r17, 0
     STS count_b, r17
-    out PORTB, count_b
+    out PORTB, r17
     
     ldi r18, 15
-    STS count_b, r18
-    out PORTC, count_b
+    STS count_c, r18
+    out PORTC, r18
     
     ;Conf. int0 e int1
-    LDI R16, 10 ;Configurar a interrupção - a hora que ocorrer determinado evento, vai interromper
+    LDI R16, 0b00001001 ;Configurar a interrupção - a hora que ocorrer determinado evento, vai interromper
     ;10 - borda de descida int1
     ;10 - borda de descida int0
     ;1010 = 10
@@ -54,20 +66,44 @@ setup:
     
     
  main:
-    sbic PIND, RST ;Pula se PIND.2 == 0 (Pressionado)
-    rjmp check_button_inc_dec ;Se não pressionado, vai checar o outro botão
+    rjmp main ;Se não pressionado, vai checar o outro botão
    
-    ;se chegou aqui, o RST foi pressionado
-    rcall reset_ports
+	
+isr_int0:
+	push r16
+	push r17
+	in r19, SREG        ; Usa r19 para SREG
+	push r19
+
+
+
+    ldi r16, 0 
+	sts count_b, r16
+    out PORTB, r16
     
-    check_button_inc_dec:
-    sbic PIND, INC_DEC ;Pula se PIND.3 == 0 (Pressionado)
-    rjmp main
-    ; SE CHEGOU AQUI, INC_DEC FOI PRESSIONADO
-    rcall inc_dec_button ; Chama a rotina de incremento/decremento
-    
-inc_dec_button:
-    in r16, PORTB ;ler o valor atual da porta B
+    ldi r17,15
+	sts count_c, r17
+    out PORTC, r17
+	
+	pop r19
+	out SREG, r19       ; Restaura SREG (usando r19)
+	pop r17
+	pop r16
+    reti                ; CORRIGIDO: Deve ser RETI
+
+isr_int1:	
+	push R16 ; Salva contexto
+	push R17
+	push R18
+	in R19, SREG        ; CORRIGIDO: Usa R19 para SREG
+	push R19
+
+
+	sbic PIND,INC_DEC 
+	rjmp dec_portc
+	
+inc_portb:
+	lds r16, count_b ;ler o valor atual da porta B
     ldi r17, 15 ;carrega o valor maximo no r17
     cp r16, r17 ;compara o valor atual com o valor máximo
     breq inc_reset ;se r16 = 15, pula para o não incremento
@@ -81,8 +117,10 @@ inc_reset:
 inc_update:
     sts count_b, r16
     out PORTB, r16 ;atualiza a porta com novo valor
-    
-    in r17, PORTC
+	rjmp fim
+
+dec_portc:
+	 lds r17, count_c
     ldi r18, 0
     cp r17, r18
     breq dec_reset
@@ -97,16 +135,11 @@ dec_update:
    sts count_c, r17
    out PORTC, r17
    rjmp fim
-   
- fim:
-    ret ;retornando a sub-rotina de incremento/decremento
-    
-reset_ports:
-    ldi r16, 0 
-    out PORTB, r16
-    
-    ldi r17,15
-    out PORTC, r17
-    ret
-
-
+	
+fim:
+	pop R19            
+	out SREG,R19
+	pop R18
+	pop R17
+	pop R16
+	reti            
