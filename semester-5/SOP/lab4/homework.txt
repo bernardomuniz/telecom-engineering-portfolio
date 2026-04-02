@@ -1,0 +1,53 @@
+1105 free
+1106 top
+1107  ps aux
+1108  clear
+1109  yes >> /dev/null
+1110  ps aux | grep yes 
+1111  kill -9 ?
+1112  kill -9 6778
+1113  kill -9 7061
+1114  top -d 10
+1115  ps aux | grep terminal
+1116  ps aux | grep bernardo
+1117  ps aux | grep bernardo > tarefas-aluno.txt
+1118  ls
+1119  ps aux | grep pluma
+1120  kill -9 7321
+1121  ps aux | grep pluma
+1122  kill -9 7369
+1123  kill -9 7375
+1124  ps aux | grep pluma
+1125  xeyes
+1126  ps aux | grep xeyes
+1127  kill -9 7391
+1128  xeyes
+1129  xeys
+1130  xeyes
+1131  fg
+1132  nano nice-renice.txt
+1133  nice -n -20 yes >> /dev/null
+1134  sude nice -n -20 yes >> /dev/null
+1135  sudo nice -n -20 yes >> /dev/null
+1136  pstree
+1137  xeyes
+1138  xeyes &
+1139  pluma
+1140  pluma &
+1141  ps -eLf
+1142  nano while.c
+1143  gcc -Wall while.c -o while
+1144  nano while.c
+1145  gcc -Wall while.c -o while
+1146  ./while
+1147  ./while &
+1148  top | grep while
+1149  top
+1150  top | grep while
+1151  xeyes &
+1152  ps aux | grep xeyes
+1153  cd /proc/9124
+1154  cat status
+1155  cat maps
+1156  ls -l fd
+1157  history > pratica2_bernardo.txt
